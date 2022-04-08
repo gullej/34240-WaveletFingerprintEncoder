@@ -1,40 +1,33 @@
-function [LL1_lululu,LL1_lululb,LL1_luluru,LL1_lulurb, LH1_rblu,LH1_rblb, ...
-            LH1_rbru,LH1_rbrb, LH1_rulu,LH1_rulb,LH1_ruru,LH1_rurb, LH1_lblu, ...
-            LH1_lblb,LH1_lbru,LH1_lbrb, LH1_lulu,LH1_lulb,LH1_luru,LH1_lurb, ...
-            HL1_rblu,HL1_rblb,HL1_rbru,HL1_rbrb,HL1_rulu,HL1_rulb,HL1_ruru,HL1_rurb,...
-            HL1_lblu,HL1_lblb,HL1_lbru,HL1_lbrb,HL1_lulu,HL1_lulb,HL1_luru,HL1_lurb,...
-            LL1_rblu,LL1_rblb,LL1_rbru,LL1_rbrb,LL1_rulu,LL1_rulb,LL1_ruru,LL1_rurb,...
-            LL1_lblu,LL1_lblb,LL1_lbru,LL1_lbrb,LL1_lulb,LL1_luru,LL1_lurb,...
-            LL4,LH4,HL4,HH4,LL3,LH3,HL3,HH3,LL2,LH2,HL2,HH2,HH1] = subbandDecompose(pic)
+function [subband] = subbandDecompose(pic)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
 [LL,LH,HL,HH] = wsqTransform(pic);
-[LL1,LH1,HL1,HH1] = wsqTransform(LL); % left up corner
-[LL2,LH2,HL2,HH2] = wsqTransform(HL);% right up corner
-[LL3,LH3,HL3,HH3] = wsqTransform(LH);% left buttom corner
-[LL4,LH4,HL4,HH4] = wsqTransform(HH);% right buttom corner
+[LL1,LH1,HL1,subband{52}] = wsqTransform(LL); % left up corner
+[subband{53},subband{55},subband{54},subband{56}] = wsqTransform(HL);% right up corner
+[subband{57},subband{59},subband{58},subband{60}] = wsqTransform(LH);% left buttom corner
+[subband{61},subband{63},subband{62},subband{64}] = wsqTransform(HH);% right buttom corner
 
 [LL1_lu,LL1_lb,LL1_ru,LL1_rb] = wsqTransform(LL1);
 [HL1_lu,HL1_lb,HL1_ru,HL1_rb] = wsqTransform(HL1);
 [LH1_lu,LH1_lb,LH1_ru,LH1_rb] = wsqTransform(LH1);
 
-[LL1_lulu,LL1_lulb,LL1_luru,LL1_lurb] = wsqTransform(LL1_lu);
-[LL1_lblu,LL1_lblb,LL1_lbru,LL1_lbrb] = wsqTransform(LL1_lb);
-[LL1_rulu,LL1_rulb,LL1_ruru,LL1_rurb] = wsqTransform(LL1_ru);
-[LL1_rblu,LL1_rblb,LL1_rbru,LL1_rbrb] = wsqTransform(LL1_rb);
+[LL1_lulu,subband{6},subband{5},subband{7}] = wsqTransform(LL1_lu);
+[subband{12},subband{14},subband{13},subband{15}] = wsqTransform(LL1_lb);
+[subband{8},subband{10},subband{9},subband{11}] = wsqTransform(LL1_ru);
+[subband{16},subband{18},subband{17},subband{19}] = wsqTransform(LL1_rb);
 
-[HL1_lulu,HL1_lulb,HL1_luru,HL1_lurb] = wsqTransform(HL1_lu);
-[HL1_lblu,HL1_lblb,HL1_lbru,HL1_lbrb] = wsqTransform(HL1_lb);
-[HL1_rulu,HL1_rulb,HL1_ruru,HL1_rurb] = wsqTransform(HL1_ru);
-[HL1_rblu,HL1_rblb,HL1_rbru,HL1_rbrb] = wsqTransform(HL1_rb);
+[subband{36},subband{38},subband{37},subband{39}] = wsqTransform(HL1_lu);
+[subband{44},subband{46},subband{45},subband{47}] = wsqTransform(HL1_lb);
+[subband{40},subband{42},subband{41},subband{43}] = wsqTransform(HL1_ru);
+[subband{48},subband{50},subband{49},subband{51}] = wsqTransform(HL1_rb);
 
-[LH1_lulu,LH1_lulb,LH1_luru,LH1_lurb] = wsqTransform(LH1_lu);
-[LH1_lblu,LH1_lblb,LH1_lbru,LH1_lbrb] = wsqTransform(LH1_lb);
-[LH1_rulu,LH1_rulb,LH1_ruru,LH1_rurb] = wsqTransform(LH1_ru);
-[LH1_rblu,LH1_rblb,LH1_rbru,LH1_rbrb] = wsqTransform(LH1_rb);
+[subband{20},subband{22},subband{21},subband{23}] = wsqTransform(LH1_lu);
+[subband{28},subband{30},subband{29},subband{31}] = wsqTransform(LH1_lb);
+[subband{24},subband{26},subband{25},subband{27}] = wsqTransform(LH1_ru);
+[subband{32},subband{34},subband{33},subband{35}] = wsqTransform(LH1_rb);
 
-[LL1_lululu,LL1_lululb,LL1_luluru,LL1_lulurb] = wsqTransform(LL1_lulu);
+[subband{1},subband{3},subband{2},subband{4}] = wsqTransform(LL1_lulu);
 
 end
 
