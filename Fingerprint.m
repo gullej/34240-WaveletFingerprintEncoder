@@ -214,7 +214,7 @@ for i = 1 : 64
     [a,b] = size(p{i});
     for i1 = 1 : a
         for j1 = 1 : b
-              p_sequence(j) = p{i}(i1,j1);
+              p_sequence(j) = p{i}(i1,j1); % p_sequence is ready for Huffman coding
               j = j + 1;
         end
     end
