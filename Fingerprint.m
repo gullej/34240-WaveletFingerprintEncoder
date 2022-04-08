@@ -3,7 +3,7 @@
 clc 
 clear
 dwtmode('sym')
-pic = imread('1.tif');
+pic = imread('110_8.tif');
 pic = double(pic);
 [c,d] = size(pic);
 [LL,LH,HL,HH] = dwt2(pic,'bior 4.4');
@@ -154,12 +154,12 @@ Q(60:64) = 0;
 
 %% Python code that hasn't finished converting -- Calculating value q is hard, might need to work on later
 % For getting the really Qk, I need to find out quantization factor q first
-j = 1;
-for i = (1:64)
-    if (Q(i) ~= 0)
-        K(j) = i;
-    end
-end
+% j = 1;
+% for i = (1:64)
+%     if (Q(i) ~= 0)
+%         K(j) = i;
+%     end
+% end
 
 % K = [k for k in range(64) if Q[k]!=0]
 % z = [(np.sqrt(variances[k])/Q[k])**(1/2**(len(filter_bank_path[k])*2)) for k in K]
@@ -170,7 +170,7 @@ end
 %         
 % q = 1/2.5 * 2**(bpp/S-1) 
 % q *= np.prod(z)**(-1/S)
-Q = Q/q; % Now we got the value of Qk (Qk = Qk'/q)
+%Q = Q/q; % Now we got the value of Qk (Qk = Qk'/q)
 
 %% Keep quantizing
 Z = 1.2 * Q; % The width of the zero bin
@@ -214,15 +214,29 @@ for i = 1 : 64
     [a,b] = size(p{i});
     for i1 = 1 : a
         for j1 = 1 : b
-              p_sequence(j) = p{i}(i1,j1); % p_sequence is ready for Huffman coding
+              p_sequence(j) = p{i}(i1,j1);
               j = j + 1;
         end
     end
 end
 
+uni = unique(p_sequence); % Get all the unique values from p_sequence
+for i = 1:length(uni)
+    count = find(p_sequence == uni(i));
+    sumcount = sum(count);
+    frequency(i) = sumcount/length(p_sequence); % count frequency for each unique value
+end
+% sum all the frequencies
+freq_sum = sum(frequency) ;
+% calculate the frequency of each pixel
+probability = frequency ./ freq_sum ;
+% create a dictionary
+dict = huffmandict(uni,probability);
+% encoding
+encodedseq = huffmanenco(p_sequence,dict);
 
 %% Huffman decoding
-
+decodedseq = huffmandeco(encodedseq,dict);
 %% Dequantization
 
 for i = 1:64
