@@ -208,6 +208,7 @@ end
 
 %% Huffman coding
 % Firstly, put all the values in p into a sequence by using raster scan
+% c and d are the size of the input pic
 p_sequence = zeros(1,c*d);
 j = 1;
 for i = 1 : 64
@@ -237,6 +238,32 @@ encodedseq = huffmanenco(p_sequence,dict);
 
 %% Huffman decoding
 decodedseq = huffmandeco(encodedseq,dict);
+decodedseq = [decodedseq zeros(1,288773)];
+count = 1;
+for i = 1:4
+    for i1 = 1:a1
+        for j1 = 1:b1
+            p_recover{i}(i1,j1) = decodedseq(count);
+            count = count + 1;
+        end
+    end
+end
+for i = 5:51
+   for i1 = 1:a2
+        for j1 = 1:b2
+            p_recover{i}(i1,j1) = decodedseq(count);
+            count = count + 1;
+        end
+    end
+end
+for i = 52:64
+   for i1 = 1:a3
+        for j1 = 1:b3
+            p_recover{i}(i1,j1) = decodedseq(count);
+            count = count + 1;
+        end
+    end
+end
 %% Dequantization
 
 for i = 1:64
@@ -250,13 +277,13 @@ for i = 1:64
 end
 C = 0.44; % the reconstructed value for each quantization bin is the center of the bin
 for i = 1:64 % The number of subband
-    [a,b] = size(p{i});% For reconstraction, we need to use values from previous step
+    [a,b] = size(p_recover{i});% For reconstraction, we need to use values from previous step
     for i1 = 1 : a
         for j1 = 1 : b
-             if (p{i}(i1,j1)) > 0
-                 a_hat{i}(i1,j1) = (p{i}(i1,j1) - C)*Q(i) + Z(i)/2;
-             elseif(p{i}(i1,j1)) < 0
-                 a_hat{i}(i1,j1) = (p{i}(i1,j1) + C)*Q(i) - Z(i)/2; 
+             if (p_recover{i}(i1,j1)) > 0
+                 a_hat{i}(i1,j1) = (p_recover{i}(i1,j1) - C)*Q(i) + Z(i)/2;
+             elseif(p_recover{i}(i1,j1)) < 0
+                 a_hat{i}(i1,j1) = (p_recover{i}(i1,j1) + C)*Q(i) - Z(i)/2; 
              else
                  a_hat{i}(i1,j1) = 0;
              end
