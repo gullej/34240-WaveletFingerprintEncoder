@@ -1,4 +1,4 @@
-function [LL,  LH, HL, HH] = wsqTransform(A)
+function [LL,  LH, HL, HH] = subbandTransform(A)
 %wsqTransform Performs a discrete wavelet transformation on the
 % matrix a.
 %   The Wavelet transform is predetermined based on predetermined coefficients.

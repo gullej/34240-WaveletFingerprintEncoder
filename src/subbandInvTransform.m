@@ -1,4 +1,4 @@
-function A = iwsqTransform(LL,  LH, HL, HH)
+function A = subbandInvTransform(LL,  LH, HL, HH)
 %iwsqTransform Performs an inverse discrete wavelet transformation on the
 % four input matrices LL,  LH, HL, HH.
 %   The Wavelet transform is predetermined based on predetermined coefficients.
