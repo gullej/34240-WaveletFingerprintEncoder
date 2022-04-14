@@ -1,4 +1,4 @@
-function [p,Q,Z,a1,b1,a2,b2,a3,b3] = subbandQuantize(subband)
+function [p,Q,Z,a1,b1,a2,b2,a3,b3] = subbandQuantize(subband, bpp)
 % Qk is quantization interval
 % Assign numbers to all the blocks
 A = ones(1,64);% building the A array
@@ -69,32 +69,43 @@ for i = 5:60
         Q(i) = 10/(A(i)*log(variance(i))); % Calculation of Qk' (Qk' = q*Qk)
     end
 end
-Q(60:64) = 0;
+Q(61:64) = 0;
 
-% Python code that hasn't finished converting -- Calculating value q is hard, might need to work on later
-% For getting the really Qk, I need to find out quantization factor q first
-% j = 1;
-% for i = (1:64)
-%     if (Q(i) ~= 0)
-%         K(j) = i;
-%     end
-% end
+filter_lengths = [5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2];
 
-% K = [k for k in range(64) if Q[k]!=0]
-% z = [(np.sqrt(variances[k])/Q[k])**(1/2**(len(filter_bank_path[k])*2)) for k in K]
-% xi = [k for k in K if Q[k]/min(1e300,q) >= 2 * 2.25 * np.sqrt(variances[k])]
-% remaining_k = [k for k in K if k not in xi];
+trying = find(Q);
 
-% S = np.sum([1/2**(len(filter_bank_path[k])*2) for k in K])
-%         
-% q = 1/2.5 * 2**(bpp/S-1) 
-% q *= np.prod(z)**(-1/S)
-%Q = Q/q; % Now we got the value of Qk (Qk = Qk'/q)
+K = Q(trying);
+filter_lengths = filter_lengths(trying);
+j = 0;
+
+while(true)
+    S = sum(0.5.^(filter_lengths*2));
+    q = 1/2.5 * 2^(bpp/S-1);
+    
+    z = sqrt(variance/K).^(0.5.^(filter_lengths*2));
+    q = q * (prod(z)^(-1/S));
+    
+    xi = K( (K/(min(10^300,q)) >= (2* 2.25 * sqrt(variance))));
+    if (size(xi,2) > 0)
+        map = ~ismember(K, xi);
+        K = K(map);
+        filter_lengths = filter_lengths(map);
+        variance = variance(map);
+        j = j + 1;
+    else
+        break
+    end
+    
+end
+
+Q = Q / q;
 
 Z = 1.2 * Q; % The width of the zero bin
 [a1,b1] = size(subband{1});
 [a2,b2] = size(subband{5});
 [a3,b3] = size(subband{52});
+
 % Actual quantization
 for i = 1:64
     if (i <= 4)

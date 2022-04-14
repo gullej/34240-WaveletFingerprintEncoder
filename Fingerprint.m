@@ -154,12 +154,12 @@ Q(60:64) = 0;
 
 %% Python code that hasn't finished converting -- Calculating value q is hard, might need to work on later
 % For getting the really Qk, I need to find out quantization factor q first
-% j = 1;
-% for i = (1:64)
-%     if (Q(i) ~= 0)
-%         K(j) = i;
-%     end
-% end
+j = 1;
+for i = (1:64)
+    if (Q(i) ~= 0)
+       K(j) = i;
+    end
+end
 
 % K = [k for k in range(64) if Q[k]!=0]
 % z = [(np.sqrt(variances[k])/Q[k])**(1/2**(len(filter_bank_path[k])*2)) for k in K]

@@ -1,4 +1,4 @@
-function [p_recover] = Huffmandecoding(encodedseq,dict,a1,b1,a2,b2,a3,b3)
+function [p_recover] = huffmanDecode(encodedseq,dict,a1,b1,a2,b2,a3,b3)
 decodedseq = huffmandeco(encodedseq,dict);
 decodedseq = [decodedseq zeros(1,288773)];
 count = 1;

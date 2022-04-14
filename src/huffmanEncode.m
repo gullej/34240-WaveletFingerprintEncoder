@@ -1,4 +1,4 @@
-function [encodedseq,dict] = Huffmancoding(c,d,p)
+function [encodedseq,dict] = huffmanEncode(c,d,p)
 % Firstly, put all the values in p into a sequence by using raster scan
 % p is the coefficients after quantization
 p_sequence = zeros(1,c*d);% c and d are the size of the input pic
