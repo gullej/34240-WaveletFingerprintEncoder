@@ -1,18 +1,4 @@
-function [outputVector, bytepos, byteneg, doublepos, doubleneg, byterun, doublerun] = entropyMap(p, n, m)
-
-
-p_sequence = zeros(1,n*m);% c and d are the size of the input pic
-j = 1;
-
-for i = 1 : 64
-    [a,b] = size(p{i});
-    for i1 = 1 : a
-        for j1 = 1 : b
-              p_sequence(j) = p{i}(i1,j1);
-              j = j + 1;
-        end
-    end
-end
+function [outputVector, bytepos, byteneg, doublepos, doubleneg, byterun, doublerun] = entropyMap(p_sequence, n, m)
 
     if size(p_sequence, 1) ~= 1
         error('This must be a row vector.')

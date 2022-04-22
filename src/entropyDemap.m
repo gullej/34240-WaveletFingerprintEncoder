@@ -18,13 +18,13 @@ function [p] = entropyDemap(v, bytepos, byteneg, doublepos, doubleneg, byterun, 
             p = [p bytepos(byteposcnt)];
             byteposcnt = byteposcnt + 1;
         elseif temp == 102
-            p = [p byteneg(bytenegcnt)];
+            p = [p -byteneg(bytenegcnt)];
             bytenegcnt = bytenegcnt + 1;
         elseif temp == 103
             p = [p doublepos(doubleposcnt)];
             doubleposcnt = doubleposcnt + 1;
         elseif temp == 104
-            p = [p doubleneg(doublenegcnt)];
+            p = [p -doubleneg(doublenegcnt)];
             doublenegcnt = doublenegcnt + 1;
         elseif temp == 105
             p = [p zeros(1,byterun(byteruncnt))];

@@ -3,7 +3,7 @@
 clc 
 clear
 dwtmode('sym')
-pic = imread('110_8.tif');
+pic = imread('DB1_B/101_5.tif');
 pic = double(pic);
 [c,d] = size(pic);
 [LL,LH,HL,HH] = dwt2(pic,'bior 4.4');

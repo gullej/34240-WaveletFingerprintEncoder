@@ -2,7 +2,6 @@ function [encodedseq,dict] = huffmanEncode(c,d,p_sequence)
 % Firstly, put all the values in p into a sequence by using raster scan
 % p is the coefficients after quantization
 
-
 uni = unique(p_sequence); % Get all the unique values from p_sequence
 
 for i = 1:length(uni)

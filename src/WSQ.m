@@ -4,7 +4,8 @@ function [encodedseq,dict,Q, Z, a1,b1,a2,b2,a3,b3,bytepos, byteneg, doublepos, d
 subbands = subbandDecompose(img);
 [n, m] = size(img);
 [p,Q,Z,a1,b1,a2,b2,a3,b3] = subbandQuantize(subbands, bpp);
-[v, bytepos, byteneg, doublepos, doubleneg, byterun, doublerun] = entropyMap(p,n,m);
+p_sequence = subbandUnfold(p,n,m);
+[v, bytepos, byteneg, doublepos, doubleneg, byterun, doublerun] = entropyMap(p_sequence,n,m);
 [encodedseq,dict] = huffmanEncode(n,m,v);
 
 end
