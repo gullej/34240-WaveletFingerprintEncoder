@@ -1,4 +1,4 @@
-function [outputVector, bytepos, byteneg, doublepos, doubleneg, byterun, doublerun] = entropyMapping(p, n, m)
+function [outputVector, bytepos, byteneg, doublepos, doubleneg, byterun, doublerun] = entropyMap(p, n, m)
 
 
 p_sequence = zeros(1,n*m);% c and d are the size of the input pic
@@ -76,8 +76,10 @@ end
     if count ~= 0
         if count > 100
             if log2(count) < 9
+                byterun = [byterun count];
                 count = 105;
             else
+                doublerun = [doublerun count];
                 count = 106;
             end
          end

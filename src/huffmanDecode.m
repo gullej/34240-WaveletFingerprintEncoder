@@ -1,5 +1,6 @@
-function [p_recover] = huffmanDecode(encodedseq,dict,a1,b1,a2,b2,a3,b3)
+function [p_recover] = huffmanDecode(encodedseq,dict,a1,b1,a2,b2,a3,b3,bytepos, byteneg, doublepos, doubleneg, byterun, doublerun)
 decodedseq = huffmandeco(encodedseq,dict);
+decodedseq = entropyDemap(decodedseq,bytepos, byteneg, doublepos, doubleneg, byterun, doublerun);
 decodedseq = [decodedseq zeros(1,288773)];
 count = 1;
 for i = 1:4
