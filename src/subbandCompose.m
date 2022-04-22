@@ -27,6 +27,5 @@ qrecover_LH = subbandInvTransform(a_hat{57},a_hat{59},a_hat{58},a_hat{60});
 qrecover_HH = subbandInvTransform(a_hat{61},a_hat{63},a_hat{62},a_hat{64});
 
 qrecover_pic = subbandInvTransform(qrecover_LL,qrecover_LH,qrecover_HL,qrecover_HH);
-imshow(qrecover_pic,[min(min(qrecover_pic)), max(max(qrecover_pic))])
   
 end
