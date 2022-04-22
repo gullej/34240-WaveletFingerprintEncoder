@@ -6,13 +6,19 @@ subbands = subbandDecompose(img);
 [n, m] = size(img);
 [p,Q,Z,a1,b1,a2,b2,a3,b3] = subbandQuantize(subbands, 0.1);
 subband_hat = subbandDequantize(p,Q,Z,a1,b1,a2,b2,a3,b3);
-img_hat = subbandCompose(subband_hat);
+img_hat = round(subbandCompose(subband_hat));
 
 
 subplot(1,2,1);
 imshow(img, [0 255]);
 subplot(1,2,2);
-imshow(img_hat,[0, 255])
+imshow(img_hat,[0, 255]);
+
+
+%%
+PSNR(double(img), img_hat);
+
+%% 
 
 [v, bytepos, byteneg, doublepos, doubleneg, byterun, doublerun] = entropyMapping(p,n,m);
 [encodedseq,dict] = huffmanEncode(n,m,v);
