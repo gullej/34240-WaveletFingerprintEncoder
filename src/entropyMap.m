@@ -1,10 +1,10 @@
-function [outputVector, bytepos, byteneg, doublepos, doubleneg, byterun, doublerun] = entropyMap(p_sequence, n, m)
+function [v, bytepos, byteneg, doublepos, doubleneg, byterun, doublerun] = entropyMap(p_sequence)
 
     if size(p_sequence, 1) ~= 1
         error('This must be a row vector.')
     end
 
-    outputVector = [ ];
+    v = [];
     
     bytepos = [];
     byteneg = [];
@@ -26,22 +26,22 @@ function [outputVector, bytepos, byteneg, doublepos, doubleneg, byterun, doubler
                     bytepos = [bytepos p_sequence(i)];
                 else
                     symbol = 103;
-                    doublepos = [doublepos uint16(p_sequence(i))];
+                    doublepos = [doublepos double(uint16(p_sequence(i)))];
                 end
             elseif p_sequence(i) < -73
                 if log2(p_sequence(i)*-1) < 9
                     symbol = 102;
-                    byteneg = [byteneg -p_sequence(i)];
+                    byteneg = [byteneg (-1)*p_sequence(i)];
                 else
                     symbol = 104;
-                    doubleneg = [doubleneg uint16(-p_sequence(i))];
+                    doubleneg = [doubleneg double(uint16((-1)*p_sequence(i)))];
                 end
             else
                 symbol = 180+p_sequence(i);
             end
                 
             if count == 0 
-                outputVector = [outputVector symbol];
+                v = [v symbol];
             else                   
                 if count > 100
                     if log2(count) < 9
@@ -52,7 +52,7 @@ function [outputVector, bytepos, byteneg, doublepos, doubleneg, byterun, doubler
                         count = 106;
                     end
                 end
-                outputVector = [outputVector count symbol];
+                v = [v count symbol];
             end
             count = 0;
         end
@@ -69,7 +69,7 @@ function [outputVector, bytepos, byteneg, doublepos, doubleneg, byterun, doubler
                 count = 106;
             end
          end
-         outputVector = [outputVector count];
+         v = double([v count]);
     end
 
 end

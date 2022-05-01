@@ -12,19 +12,19 @@ function [p] = entropyDemap(v, bytepos, byteneg, doublepos, doubleneg, byterun, 
 
     for i = 1:size(v, 2)
         temp = v(i);
-        if temp < 101
+        if (temp < 101 && temp > 0)
             p = [p zeros(1,temp)];
         elseif temp == 101
             p = [p bytepos(byteposcnt)];
             byteposcnt = byteposcnt + 1;
         elseif temp == 102
-            p = [p -byteneg(bytenegcnt)];
+            p = [p (-1)*byteneg(bytenegcnt)];
             bytenegcnt = bytenegcnt + 1;
         elseif temp == 103
             p = [p doublepos(doubleposcnt)];
             doubleposcnt = doubleposcnt + 1;
         elseif temp == 104
-            p = [p -doubleneg(doublenegcnt)];
+            p = [p (-1)*doubleneg(doublenegcnt)];
             doublenegcnt = doublenegcnt + 1;
         elseif temp == 105
             p = [p zeros(1,byterun(byteruncnt))];
@@ -38,5 +38,6 @@ function [p] = entropyDemap(v, bytepos, byteneg, doublepos, doubleneg, byterun, 
         
     end
 
+    p = double(p);
 end
 

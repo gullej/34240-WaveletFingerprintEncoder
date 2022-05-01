@@ -1,11 +1,13 @@
 % Test of WSQ
 close all; clearvars; clc;
-load('recover_pic.mat');
 img = imread('DB1_B/101_5.tif');
 bpp = 1;
+[n, m] = size(img);
 
 %% Subband
+
 subbands = subbandDecompose(img);
+
 img_hat = subbandCompose(subbands);
 
 subplot(1,2,1);
@@ -17,8 +19,9 @@ imshow(uint8(img_hat));
 
 %% Quantize
 
-[n, m] = size(img);
+subbands = subbandDecompose(img);
 [p,Q,Z,a1,b1,a2,b2,a3,b3] = subbandQuantize(subbands, bpp);
+
 subband_hat = subbandDequantize(p,Q,Z,a1,b1,a2,b2,a3,b3);
 img_hat = subbandCompose(subband_hat);
 
@@ -31,9 +34,13 @@ imshow(uint8(img_hat));
 
 %% Unfold
 
-p_sequence = subbandUnfold(subbands,n,m);
+subbands = subbandDecompose(img);
+[p,Q,Z,a1,b1,a2,b2,a3,b3] = subbandQuantize(subbands, bpp);
+p_sequence = subbandUnfold(p,n,m);
+
 p_recover = subbandFold(p_sequence, a1, b1, a2, b2, a3, b3);
-img_hat = subbandCompose(p_recover);
+subband_hat = subbandDequantize(p_recover,Q,Z,a1,b1,a2,b2,a3,b3);
+img_hat = subbandCompose(subband_hat);
 
 subplot(1,2,1);
 imshow(img);
@@ -44,10 +51,21 @@ imshow(uint8(img_hat));
 
 %% Entropy Map
 
-[v, bytepos, byteneg, doublepos, doubleneg, byterun, doublerun] = entropyMap(p_sequence,n,m);
-p_hat = entropyDemap(uint16(v), bytepos, byteneg, doublepos, doubleneg, byterun, doublerun);
-p_recover = subbandFold(p_sequence, a1, b1, a2, b2, a3, b3);
-img_hat = subbandCompose(p_recover);
+subbands = subbandDecompose(img);
+[p,Q,Z,a1,b1,a2,b2,a3,b3] = subbandQuantize(subbands, bpp);
+p_sequence = subbandUnfold(p,n,m);
+[v, bytepos, byteneg, doublepos, doubleneg, byterun, doublerun] = entropyMap(p_sequence);
+
+p_hat = entropyDemap(v, bytepos, byteneg, doublepos, doubleneg, byterun, doublerun);
+p_recover = subbandFold(p_hat, a1, b1, a2, b2, a3, b3);
+subband_hat = subbandDequantize(p_recover,Q,Z,a1,b1,a2,b2,a3,b3);
+img_hat = subbandCompose(subband_hat);
+
+
+key = (p_hat ~= p_sequence);
+temp1 = [p_sequence; p_hat];
+temp2 = [p_sequence(key); p_hat(key)];
+sum(p_hat<0)
 
 subplot(1,2,1);
 imshow(img);
@@ -58,11 +76,23 @@ imshow(uint8(img_hat));
 
 %% Huffman
 
+subbands = subbandDecompose(img);
+[p,Q,Z,a1,b1,a2,b2,a3,b3] = subbandQuantize(subbands, bpp);
+p_sequence = subbandUnfold(p,n,m);
+[v, bytepos, byteneg, doublepos, doubleneg, byterun, doublerun] = entropyMap(p_sequence);
 [encodedseq,dict] = huffmanEncode(n,m,v);
+
 decodedseq = huffmanDecode(encodedseq,dict);
 p_hat = entropyDemap(decodedseq, bytepos, byteneg, doublepos, doubleneg, byterun, doublerun);
-p_recover = subbandFold(p_sequence, a1, b1, a2, b2, a3, b3);
-img_hat = subbandCompose(p_recover);
+p_recover = subbandFold(p_hat, a1, b1, a2, b2, a3, b3);
+subband_hat = subbandDequantize(p_recover,Q,Z,a1,b1,a2,b2,a3,b3);
+img_hat = subbandCompose(subband_hat);
+
+
+key = (p_hat ~= p_sequence);
+temp1 = [p_sequence; p_hat];
+temp2 = [p_sequence(key); p_hat(key)];
+sum(p_hat<0)
 
 subplot(1,2,1);
 imshow(img);
@@ -75,11 +105,9 @@ imshow(uint8(img_hat));
 [encodedseq,dict,Q, Z, a1,b1,a2,b2,a3,b3,bytepos, byteneg, doublepos, doubleneg, byterun, doublerun] = WSQ(img, bpp);
 img_hat = WSQinv(encodedseq,dict,Q, Z, a1,b1,a2,b2,a3,b3,bytepos, byteneg, doublepos, doubleneg, byterun, doublerun);
 
-subplot(1,3,1);
+subplot(1,2,1);
 imshow(img);
-subplot(1,3,2);
+subplot(1,2,2);
 imshow(uint8(img_hat));
-subplot(1,3,3);
-imshow(uint8(recover_pic));
 
 [psnr, mse, per, rate] = evaluateCompression(img, bpp)
