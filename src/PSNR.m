@@ -6,8 +6,8 @@ if A==B
 end
 max2_A=max(max(A)); max2_B=max(max(B));
 min2_A=min(min(A)); min2_B=min(min(B));
-if max2_A>1 || max2_B>1 || min2_A<0 || min2_B<0
-    error('pixels must be in [0,1]')
+if max2_A>1 || max2_B>1 || min2_A<(-1) || min2_B<(-1)
+    error('pixels must be in [-1,1]')
 end
 differ=A-B;
 MSE = mean(mean(differ.^2));
