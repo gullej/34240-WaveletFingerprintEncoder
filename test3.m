@@ -4,12 +4,17 @@ close all; clearvars; clc;
 files = dir('DB1_B/*.tif');
 values = [];
 names = [];
-bpp = 4;
 
-for file = files'
-    file.name
-    img = imread(strcat('DB1_B/',file.name));
-    [psnr, mse, per, rate] = evaluateCompression(img, bpp);
-    names = [names; file.name];
-    values = [values ; psnr, mse, per, rate];
+
+for i = 4:4
+    j = 1;
+    for file = files'
+        img = imread(strcat('DB1_B/',file.name));
+        [psnr, len, bpp, mse, per, rate] = evaluateCompression(img, i);
+        values = [values ; psnr, len, bpp, mse, per, rate];
+        j = j + 1;
+    end
+
+    S{bpp} = struct("psnr", values(:,1), "len", values(:,2), "bpp", values(:,3), "mse", values(:,4), "per", values(:,5), "rate", values(:,6));
 end
+
