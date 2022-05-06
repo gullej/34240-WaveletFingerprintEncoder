@@ -6,7 +6,7 @@ values = [];
 names = [];
 
 
-for i = 4:4
+for i = 3:8
     j = 1;
     for file = files'
         img = imread(strcat('DB1_B/',file.name));
@@ -15,6 +15,6 @@ for i = 4:4
         j = j + 1;
     end
 
-    S{bpp} = struct("psnr", values(:,1), "len", values(:,2), "bpp", values(:,3), "mse", values(:,4), "per", values(:,5), "rate", values(:,6));
+    S{i} = struct("psnr", values(:,1), "len", values(:,2), "bpp", values(:,3), "mse", values(:,4), "per", values(:,5), "rate", values(:,6));
 end
 
