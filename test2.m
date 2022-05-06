@@ -1,21 +1,18 @@
 % Test of WSQ
 close all; clearvars; clc;
-img = imread('DB1_B/101_5.tif');
-bpp = 1;
 
-subbands = subbandDecompose(img);
+img = imread('DB1_B/102_3.tif');
+bpp = 4;
 [n, m] = size(img);
-[p,Q,Z,a1,b1,a2,b2,a3,b3] = subbandQuantize(subbands, bpp);
-[v, bytepos, byteneg, doublepos, doubleneg, byterun, doublerun] = entropyMap(p,n,m);
-[encodedseq,dict] = huffmanEncode(n,m,v);
 
-p_recover = huffmanDecode(encodedseq,dict,a1,b1,a2,b2,a3,b3,bytepos, byteneg, doublepos, doubleneg, byterun, doublerun);
-subband_hat = subbandDequantize(p_recover,Q,Z,a1,b1,a2,b2,a3,b3);
-img_hat = subbandCompose(subband_hat);
+[encodedseq,dict,Q, Z, a1,b1,a2,b2,a3,b3,bytepos, byteneg, doublepos, doubleneg, byterun, doublerun] = WSQ(img, bpp);
+img_hat = WSQinv(encodedseq,dict,Q, Z, a1,b1,a2,b2,a3,b3,bytepos, byteneg, doublepos, doubleneg, byterun, doublerun);
+[psnr, mse, per, rate] = evaluateCompression(img, bpp);
 
-subplot(1,2,1);
-imshow(img, [0 255]);
+txt = {sprintf('PSNR: %.3f',psnr),sprintf('MSE: %.3f',mse),sprintf('Compression rate: %.3f',rate)};
+
+subplot(1,2,1)
+imshow(img);
 subplot(1,2,2);
-imshow(img_hat,[0, 255]);
-
-[psnr, mse, per, rate] = evaluateCompression(img, bpp)
+imshow(uint8(img_hat));
+text(-200, 600, txt)

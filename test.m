@@ -1,7 +1,7 @@
 % Test of WSQ
 close all; clearvars; clc;
-img = imread('DB1_B/101_5.tif');
-bpp = 1;
+img = imread('DB1_B/102_3.tif');
+bpp = 4;
 [n, m] = size(img);
 
 %% Subband
@@ -15,7 +15,7 @@ imshow(img);
 subplot(1,2,2);
 imshow(uint8(img_hat));
 
-[psnr, mse] = PSNR(double(img), img_hat)
+[psnr, mse] = PSNR(double(img), img_hat);
 
 %% Quantize
 
@@ -30,7 +30,7 @@ imshow(img);
 subplot(1,2,2);
 imshow(uint8(img_hat));
 
-[psnr, mse] = PSNR(double(img), img_hat)
+[psnr, mse] = PSNR(double(img), img_hat);
 
 %% Unfold
 
@@ -47,7 +47,7 @@ imshow(img);
 subplot(1,2,2);
 imshow(uint8(img_hat));
 
-[psnr, mse] = PSNR(double(img), img_hat)
+[psnr, mse] = PSNR(double(img), img_hat);
 
 %% Entropy Map
 
@@ -72,7 +72,7 @@ imshow(img);
 subplot(1,2,2);
 imshow(uint8(img_hat));
 
-[psnr, mse] = PSNR(double(img), img_hat)
+[psnr, mse] = PSNR(double(img), img_hat);
 
 %% Huffman
 
@@ -99,15 +99,6 @@ imshow(img);
 subplot(1,2,2);
 imshow(uint8(img_hat));
 
-[psnr, mse] = PSNR(double(img), img_hat)
+[psnr, mse] = PSNR(double(img), img_hat);
 
-%%
-[encodedseq,dict,Q, Z, a1,b1,a2,b2,a3,b3,bytepos, byteneg, doublepos, doubleneg, byterun, doublerun] = WSQ(img, bpp);
-img_hat = WSQinv(encodedseq,dict,Q, Z, a1,b1,a2,b2,a3,b3,bytepos, byteneg, doublepos, doubleneg, byterun, doublerun);
 
-subplot(1,2,1);
-imshow(img);
-subplot(1,2,2);
-imshow(uint8(img_hat));
-
-[psnr, mse, per, rate] = evaluateCompression(img, bpp)
